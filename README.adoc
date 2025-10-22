@@ -1,0 +1,29 @@
+= demo-openapi-client-codegen
+:toc:
+:toclevels: 3
+:imagesdir: assets/images
+
+== Getting started
+
+Generate artefacts:
+
+[source,bash]
+----
+mvn generate-sources
+----
+
+== Documentation
+
+=== OpenAPI Generator
+
+* https://openapi-generator.tech/
+** Generators
+*** https://openapi-generator.tech/docs/generators/spring/
+** Templates
+*** https://github.com/OpenAPITools/openapi-generator/tree/master/modules/openapi-generator/src/main/resources/JavaSpring/libraries/spring-http-interface[spring-http-interface]
+*** https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator/src/main/resources/JavaSpring/libraries/spring-http-interface/api.mustache[interface template]
+*** https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator/src/main/resources/JavaSpring/pathParams.mustache[pathParams.mustache]
+
+== Spring
+
+* https://docs.spring.io/spring-framework/reference/integration/rest-clients.html#rest-http-interface[REST Clients / HTTP Interface]
