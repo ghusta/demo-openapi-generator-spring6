@@ -7,21 +7,56 @@ servers:
   - url: http://localhost:8080
     description: Generated server url
 paths:
-  /api/cities:
+  /api/countries:
     get:
       tags:
-        - city
-      operationId: getAllCities
+        - country
+      operationId: getAllCountries
       responses:
         "200":
           description: OK
           content:
-            "*/*":
+            '*/*':
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/City"
-
+                  $ref: "#/components/schemas/Country"
+  /api/countries/{code}:
+    get:
+      tags:
+        - country
+      operationId: getCountryByCode
+      parameters:
+        - name: code
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Country"
+  /api/cities:
+    get:
+      tags:
+        - city
+      operationId: getAllCitiesPaginated
+      parameters:
+        - name: pageable
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/Pageable"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PagedModelCity"
   /api/cities/{id}:
     get:
       tags:
@@ -38,10 +73,24 @@ paths:
         "200":
           description: OK
           content:
-            "*/*":
+            '*/*':
               schema:
                 $ref: "#/components/schemas/City"
-
+  /api/cities/unpaginated:
+    get:
+      tags:
+        - city
+      operationId: getAllCities
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/City"
+      deprecated: true
   /api/cities/country/{code}:
     get:
       tags:
@@ -57,12 +106,11 @@ paths:
         "200":
           description: OK
           content:
-            "*/*":
+            '*/*':
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/City"
-
 components:
   schemas:
     City:
@@ -82,3 +130,92 @@ components:
           format: int32
         localName:
           type: string
+    Country:
+      type: object
+      properties:
+        code:
+          type: string
+          maxLength: 3
+          minLength: 0
+        name:
+          type: string
+        continent:
+          type: string
+        region:
+          type: string
+        surfaceArea:
+          type: number
+          format: float
+        indepYear:
+          type: integer
+          format: int32
+        population:
+          type: integer
+          format: int32
+        lifeExpectancy:
+          type: number
+          format: float
+        gnp:
+          type: number
+        gnpOld:
+          type: number
+        localName:
+          type: string
+        governmentForm:
+          type: string
+        headOfState:
+          type: string
+        capital:
+          $ref: "#/components/schemas/City"
+        code2:
+          type: string
+          maxLength: 2
+          minLength: 0
+      required:
+        - code2
+        - continent
+        - governmentForm
+        - localName
+        - name
+        - population
+        - region
+        - surfaceArea
+    Pageable:
+      type: object
+      properties:
+        page:
+          type: integer
+          format: int32
+          minimum: 0
+        size:
+          type: integer
+          format: int32
+          minimum: 1
+        sort:
+          type: array
+          items:
+            type: string
+    PageMetadata:
+      type: object
+      properties:
+        size:
+          type: integer
+          format: int64
+        number:
+          type: integer
+          format: int64
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int64
+    PagedModelCity:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/City"
+        page:
+          $ref: "#/components/schemas/PageMetadata"
