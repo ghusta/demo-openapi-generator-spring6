@@ -45,11 +45,31 @@ paths:
         - city
       operationId: getAllCitiesPaginated
       parameters:
-        - name: pageable
+        - name: page
           in: query
-          required: true
+          description: Zero-based page index (0..N)
+          required: false
           schema:
-            $ref: "#/components/schemas/Pageable"
+            type: integer
+            default: 0
+            minimum: 0
+        - name: size
+          in: query
+          description: The size of the page to be returned
+          required: false
+          schema:
+            type: integer
+            default: 100
+            minimum: 1
+        - name: sort
+          in: query
+          description: "Sorting criteria in the format: property,(asc|desc). Default\
+          \ sort order is ascending. Multiple sort criteria are supported."
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
       responses:
         "200":
           description: OK
@@ -180,21 +200,6 @@ components:
         - population
         - region
         - surfaceArea
-    Pageable:
-      type: object
-      properties:
-        page:
-          type: integer
-          format: int32
-          minimum: 0
-        size:
-          type: integer
-          format: int32
-          minimum: 1
-        sort:
-          type: array
-          items:
-            type: string
     PageMetadata:
       type: object
       properties:
