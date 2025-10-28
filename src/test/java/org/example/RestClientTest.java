@@ -4,9 +4,7 @@ import com.example.client.api.CityApi;
 import com.example.client.api.CountryApi;
 import com.example.client.model.City;
 import com.example.client.model.Country;
-import com.example.client.model.Pageable;
 import com.example.client.model.PagedModelCity;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -14,8 +12,6 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.support.RestClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,22 +34,6 @@ class RestClientTest {
     }
 
     @Test
-    void serializePageData() throws IOException {
-        Pageable pageRequest = new Pageable().page(5).size(10);
-
-        JsonMapper jsonMapper = JsonMapper.builder().build();
-
-        StringWriter stringWriter = new StringWriter();
-        jsonMapper.writeValue(stringWriter, pageRequest);
-        assertThat(stringWriter.toString())
-                .isNotEmpty()
-                .startsWith("{")
-                .contains("\"page\":5")
-                .contains("\"sort\":[]")
-                .endsWith("}");
-    }
-
-    @Test
     @SuppressWarnings("all")
     void api_call_getCitiesByPage() {
         RestClient restClient = RestClient.builder().baseUrl("http://localhost:8080/").build();
@@ -62,8 +42,7 @@ class RestClientTest {
 
         CityApi cityApi = factory.createClient(CityApi.class);
 
-        Pageable pageRequest = new Pageable().page(5).size(10);
-        PagedModelCity citiesPage5 = cityApi.getAllCitiesPaginated(pageRequest.getPage(), pageRequest.getSize(), pageRequest.getSort());
+        PagedModelCity citiesPage5 = cityApi.getAllCitiesPaginated(5, 10, null);
         assertThat(citiesPage5.getContent()).isNotEmpty();
         System.out.println(citiesPage5.getPage().getSize());
         System.out.println(citiesPage5.getContent().get(0).toString());
